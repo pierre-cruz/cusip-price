@@ -21,7 +21,6 @@ public class CusipPriceApplication {
 
 
 	@Bean
-//	public CommandLineRunner demo(CusipRepository repository) {
 	public CommandLineRunner demo(CusipService service, CusipRepository repository) {
 		return (args) -> {
 			service.ingestCusipFile("CusipPrice.txt");

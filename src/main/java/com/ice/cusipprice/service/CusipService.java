@@ -25,18 +25,24 @@ public class CusipService {
         LineIterator it = FileUtils.lineIterator(theFile, "UTF-8");
         try {
             String cusip = null;
-            Double price;
+            String lastCusip = null;
+            Double price = null;
             while (it.hasNext()) {
+                lastCusip = cusip;
                 String line = it.nextLine().trim();
                 if(isCusip(line)) {
+                    if(lastCusip != null && price != null) {
+                        cusipRepository.save(new Cusip(lastCusip, price));
+                    }
+                    price = null;
                     cusip = line;
                     continue;
                 }
                 if(NumberUtils.isCreatable(line)) {
                     price = Double.parseDouble(line);
-                    cusipRepository.save(new Cusip(cusip, price));
                 }
             }
+            cusipRepository.save(new Cusip(cusip, price));
         } finally {
             it.close();
         }
